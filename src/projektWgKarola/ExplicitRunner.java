@@ -1,0 +1,44 @@
+package projektWgKarola;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+
+public class ExplicitRunner {
+
+    public static void main(String[] args) {
+
+        
+
+        String address = "jdbc:postgresql://127.0.0.1:5432/todo_list";
+
+        List<String> stringCommands = List.of(
+                "DELETE ALL;",
+                "CREATE;NAME=TASK1;DESCRIPTION=SOME DESCRIPTION1;DEADLINE=11.02.2021 20:10;PRIORITY=0",
+                "CREATE;NAME=TASK2;DESCRIPTION=SOME DESCRIPTION2;DEADLINE=12.02.2021 20:10;PRIORITY=1",
+                "CREATE;NAME=TASK3;DESCRIPTION=SOME DESCRIPTION3;DEADLINE=12.02.2021 20:10;PRIORITY=2",
+                "CREATE;NAME=TASK4;DESCRIPTION=SOME DESCRIPTION4;DEADLINE=14.02.2021 20:10;PRIORITY=3",
+                "CREATE;NAME=TASK5;DESCRIPTION=SOME DESCRIPTION5;DEADLINE=14.02.2021 20:10;PRIORITY=4",
+                "READ GROUPED;",
+                "READ ALL;",
+                "COMPLETED;NAME=TASK3",
+                "READ ALL;"
+
+        );
+
+        CommandBuilder commandBuilder = new CommandBuilder();
+        DatabaseRunner databaseRunner = new DatabaseRunner();
+
+        List<Command> commands = stringCommands.stream()
+                .map(commandBuilder::buildCommand)
+                .filter(Optional::isPresent)
+                .map(Optional::get).toList();
+
+
+        commands.forEach(databaseRunner::run);
+
+
+
+        Scanner sc = new Scanner(System.in);
+    }
+}
